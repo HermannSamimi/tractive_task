@@ -2,27 +2,58 @@ version: 2
 
 models:
   - name: transformation
-    description: "Cleaned and validated data after transformation"
+    description: "Validated and filtered data with only healthy, usable subscription events."
     columns:
       - name: _id
-        description: "Unique ID"
+        description: "Unique identifier for the event. Must not be null or duplicated."
         tests:
           - not_null
           - unique
       - name: event_name
-        description: "Event type"
+        description: "Should be one of: CREATED, CANCELLED, EXPIRED."
         tests:
           - accepted_values:
               values: ['CREATED', 'CANCELLED', 'EXPIRED']
+      - name: purchase_id
+        description: "Nullable only for CANCELLED events. Otherwise must be present."
+        tests:
+          - not_null:
+              config:
+                where: "event_name != 'CANCELLED'"
       - name: payment_plan_id
-        description: "Plan ID"
+        description: "Must always be present."
         tests:
           - not_null
       - name: subscription_id
-        description: "Subscription ID"
+        description: "Must always be present."
         tests:
           - not_null
       - name: user_id
-        description: "User ID"
+        description: "User that triggered the event."
         tests:
           - not_null
+      - name: date
+        description: "Derived date from created_at."
+      - name: hour
+        description: "Hour of the event (0–23)."
+      - name: modeling_ingestion_timestamp
+        description: "Time when record was loaded into dbt."
+  - name: waste_data
+    description: "Records filtered out during transformation due to missing or invalid values."
+    columns:
+      - name: _id
+        description: "May be null, indicating an invalid record."
+      - name: event_name
+        description: "Invalid if not one of: CREATED, CANCELLED, EXPIRED."
+      - name: purchase_id
+        description: "May be null if event is CANCELLED, otherwise required."
+      - name: payment_plan_id
+        description: "Must not be null. Null values are considered invalid."
+      - name: subscription_id
+        description: "Required for tracking a subscription."
+      - name: user_id
+        description: "ID of the user. Required for linking actions to users."
+      - name: created_at
+        description: "Must not be in the future or null."
+      - name: modeling_ingestion_timestamp
+        description: "Time when record was ingested."

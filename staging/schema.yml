@@ -1,4 +1,3 @@
-# staging/schema.yml
 version: 2
 
 sources:
@@ -10,4 +9,21 @@ sources:
 
 models:
   - name: load_data
-    description: "Loads and stages raw data"
+    description: "Raw cleaned version of the original CSV data ingested into Snowflake."
+    columns:
+      - name: _id
+        description: "Unique identifier for the event."
+      - name: event_name
+        description: "Type of event (CREATED, CANCELLED, EXPIRED)."
+      - name: purchase_id
+        description: "Unique identifier for the purchase."
+      - name: payment_plan_id
+        description: "ID of the payment plan used for the subscription."
+      - name: subscription_id
+        description: "ID of the subscription."
+      - name: user_id
+        description: "ID of the user performing the event."
+      - name: created_at
+        description: "Timestamp when the event occurred."
+      - name: modeling_ingestion_timestamp
+        description: "Timestamp when the record was modeled via dbt."

@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: simplistic_approach
+    description: >
+      this caclulate the required metrics considering all fields okay.
+    columns:
+      - name: subscription_id
+        description: "Unique subscription identifier"
+      - name: cancellationRate
+        description: "Binary cancellation rate based on first cancellation per subscription"
+      - name: cancellationRateFeaturePerformance
+        description: "Ratio of all cancellations to created subscriptions"
+
+
+  - name: cancellation_rate
+    description: >
+      Calculates the Cancellation Rate by counting only the first cancellation
+      event per subscription. It reflects how many unique subscriptions were cancelled
+      at least once, relative to all created subscriptions.
+      This metric helps assess the proportion of subscriptions that didn’t sustain.
+    columns:
+      - name: subscription_id
+        description: "The unique identifier for each subscription."
+      - name: first_cancelled
+        description: "Indicates whether the subscription was cancelled at least once (1) or not (0)."
+      - name: created_count
+        description: "Number of CREATED events for the subscription."
+
+  - name: cancellation_rate_feature_performance
+    description: >
+      Calculates the Cancellation Rate Feature Performance by dividing the total number
+      of cancellation events (all cancellations, including multiple ones per subscription)
+      by the number of created subscriptions. It evaluates the frequency and repeat rate
+      of cancellations and is useful for understanding how effective or buggy
+      the cancellation feature might be.
+    columns:
+      - name: subscription_id
+        description: "The unique identifier for each subscription."
+      - name: cancelled_count
+        description: "Total number of times the subscription was cancelled."
+      - name: created_count
+        description: "Number of CREATED events for the subscription."
+      - name: cancellationRateFeaturePerformance
+        description: "cancelled_count divided by created_count for the subscription."
+
+  - name: simplistic_rates
+    description: >
+      Final task metrics computed by taking the average over cancellation ratios from
+      `simplistic_approach`. These metrics represent:
+      - cancellation_rate: The proportion of subscriptions that had at least one cancellation.
+      - cancellation_rate_feature_performance: The total number of cancellations (including duplicates)
+        relative to the number of created subscriptions.
+    columns:
+      - name: cancellation_rate
+        description: "Average of 1/created for subscriptions with at least one cancellation."
+      - name: cancellation_rate_feature_performance
+        description: "Average of total cancellations divided by created subscriptions."

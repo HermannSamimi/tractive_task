@@ -4,14 +4,20 @@ config-version: 2
 
 profile: default
 
-model-paths: ["marts", "staging", "transformation"]
+model-paths: ["marts", "staging", "transformation", "metrics"]
 
 models:
   tractive_task:
     marts:
       events:
+        +tags: events
         +materialized: view
     staging:
+      +tags: load
       +materialized: view
     transformation:
+      +tags: Transformation
+      +materialized: table
+    metrics:
+      +tags: metrics
       +materialized: table
