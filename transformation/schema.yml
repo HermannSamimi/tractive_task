@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: transformation
+    description: "Cleaned and validated data after transformation"
+    columns:
+      - name: _id
+        description: "Unique ID"
+        tests:
+          - not_null
+          - unique
+      - name: event_name
+        description: "Event type"
+        tests:
+          - accepted_values:
+              values: ['CREATED', 'CANCELLED', 'EXPIRED']
+      - name: payment_plan_id
+        description: "Plan ID"
+        tests:
+          - not_null
+      - name: subscription_id
+        description: "Subscription ID"
+        tests:
+          - not_null
+      - name: user_id
+        description: "User ID"
+        tests:
+          - not_null

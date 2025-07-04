@@ -1,0 +1,13 @@
+# staging/schema.yml
+version: 2
+
+sources:
+  - name: raw
+    database: TRACTIVE_DB
+    schema: PUBLIC
+    tables:
+      - name: RAW_DATA
+
+models:
+  - name: load_data
+    description: "Loads and stages raw data"

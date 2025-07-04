@@ -1,0 +1,17 @@
+name: tractive_task
+version: '1.0'
+config-version: 2
+
+profile: default
+
+model-paths: ["marts", "staging", "transformation"]
+
+models:
+  tractive_task:
+    marts:
+      events:
+        +materialized: view
+    staging:
+      +materialized: view
+    transformation:
+      +materialized: table
